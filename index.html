@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevOps Engineer Guide 2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      color: #e0e0e0;
+      padding: 1%;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.6);
+      border-left: 4px solid #00ff88;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    h1 {
+      font-size: 16px;
+      color: #00ff88;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #a0a0a0;
+      font-style: italic;
+    }
+
+    .difficulty-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 10px;
+    }
+
+    .diff-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .diff-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .hard { background: #ff4444; }
+    .easy { background: #44ff44; }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .task-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #00ff88;
+      transform: translateX(3px);
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .task-number {
+      background: #00ff88;
+      color: #0f2027;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .task-title {
+      font-size: 13px;
+      color: #00ff88;
+      font-weight: bold;
+      flex: 1;
+      margin: 0 10px;
+    }
+
+    .difficulty-badge {
+      font-size: 9px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .level-1 { background: #ff4444; color: white; }
+    .level-2 { background: #ff6644; color: white; }
+    .level-3 { background: #ff8844; color: white; }
+    .level-4 { background: #ffaa44; color: white; }
+    .level-5 { background: #ffcc44; color: black; }
+    .level-6 { background: #88ff44; color: black; }
+    .level-7 { background: #44ff44; color: black; }
+
+    .task-content {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    .task-content.active {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-title {
+      font-size: 11px;
+      color: #00ff88;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .instruction-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .instruction-list li {
+      font-size: 11px;
+      padding: 5px 0 5px 15px;
+      position: relative;
+      color: #c0c0c0;
+    }
+
+    .instruction-list li:before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .tip-box {
+      background: rgba(0, 255, 136, 0.1);
+      border-left: 3px solid #00ff88;
+      padding: 8px;
+      margin-top: 8px;
+      font-size: 10px;
+      border-radius: 3px;
+    }
+
+    .tip-label {
+      color: #00ff88;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .tech-tag {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 9px;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      font-size: 10px;
+      color: #808080;
+    }
+
+    .expand-icon {
+      font-size: 12px;
+      color: #00ff88;
+      transition: transform 0.3s ease;
+    }
+
+    .expand-icon.rotated {
+      transform: rotate(90deg);
+    }
+
+    .progress-section {
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid #00ff88;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-title {
+      font-size: 12px;
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .progress-stats {
+      font-size: 11px;
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .progress-bar-container {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      height: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #00ff88, #00cc6a);
+      height: 100%;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #0f2027;
+    }
+
+    .progress-percentage {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      line-height: 20px;
+      font-size: 10px;
+      font-weight: bold;
+      color: #00ff88;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .checkbox-container:hover {
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .custom-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #00ff88;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .custom-checkbox.checked {
+      background: #00ff88;
+    }
+
+    .checkmark {
+      color: #0f2027;
+      font-weight: bold;
+      font-size: 14px;
+      display: none;
+    }
+
+    .custom-checkbox.checked .checkmark {
+      display: block;
+    }
+
+    .checkbox-label {
+      font-size: 11px;
+      color: #e0e0e0;
+      flex: 1;
+    }
+
+    .task-card.completed {
+      opacity: 0.6;
+      border-color: rgba(0, 255, 136, 0.5);
+    }
+
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      color: #808080;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00ff88, #00cc6a);
+      color: #0f2027;
+      border: 2px solid #00ff88;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #00cc6a, #00ff88);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #00ff88;
+      border: 2px solid rgba(0, 255, 136, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 255, 136, 0.1);
+      border-color: #00ff88;
+    }
+
+    .btn-danger {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+      border: 2px solid rgba(255, 68, 68, 0.5);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 68, 68, 0.3);
+      border-color: #ff4444;
+    }
+
+    .bookmark-btn {
+      position: absolute;
+      right: 50px;
+      top: 12px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bookmark-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .task-card.bookmarked {
+      border-color: #ffaa44;
+      box-shadow: 0 0 10px rgba(255, 170, 68, 0.3);
+    }
+
+    .task-card.bookmarked .bookmark-btn {
+      color: #ffaa44;
+    }
+
+    .notes-section {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      min-height: 80px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 4px;
+      padding: 8px;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      resize: vertical;
+      display: none;
+    }
+
+    .notes-textarea.active {
+      display: block;
+    }
+
+    .notes-textarea:focus {
+      outline: none;
+      border-color: #00ff88;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .saved-note {
+      background: rgba(0, 255, 136, 0.1);
+      border-left: 3px solid #00ff88;
+      padding: 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      color: #c0c0c0;
+      display: none;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .saved-note.active {
+      display: block;
+    }
+
+    .notes-btn {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+    }
+
+    .notes-btn:hover {
+      background: rgba(0, 255, 136, 0.3);
+      border-color: #00ff88;
+    }
+
+    .quick-links {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      background: rgba(100, 149, 237, 0.2);
+      color: #6495ed;
+      border: 1px solid rgba(100, 149, 237, 0.4);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+    }
+
+    .link-btn:hover {
+      background: rgba(100, 149, 237, 0.3);
+      border-color: #6495ed;
+      transform: translateY(-2px);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 100%);
+      border: 2px solid #00ff88;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+    }
+
+    .modal-header {
+      font-size: 14px;
+      color: #00ff88;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .modal-body {
+      font-size: 11px;
+      color: #c0c0c0;
+      margin-bottom: 20px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+    }
+
+    .modal-btn-confirm {
+      background: #ff4444;
+      color: white;
+    }
+
+    .modal-btn-confirm:hover {
+      background: #ff6666;
+    }
+
+    .modal-btn-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: #00ff88;
+      border: 2px solid rgba(0, 255, 136, 0.5);
+    }
+
+    .modal-btn-cancel:hover {
+      background: rgba(0, 255, 136, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🇵🇭 Filipino DevOps Engineer Guide 2026</h1>
+      <div class="subtitle">Comprehensive Instruction Manual: AWS-Focused</div>
+    </header>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <div class="progress-title">📊 Your Progress</div>
+        <div class="progress-stats"><span id="completed-count">0</span>/7 Tasks Completed</div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-fill" style="width: 0%;">
+          <span id="progress-text"></span>
+        </div>
+        <div class="progress-percentage" id="progress-percentage">0%</div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" onclick="expandAll()">📂 Expand All</button>
+      <button class="btn btn-secondary" onclick="collapseAll()">📁 Collapse All</button>
+      <button class="btn btn-danger" onclick="showResetModal()">🔄 Reset Progress</button>
+    </div>
+
+    <div class="difficulty-indicator">
+      <div class="diff-label">
+        <span class="diff-dot hard"></span>
+        <span>HARDEST</span>
+      </div>
+      <div style="flex: 1; height: 2px; background: linear-gradient(to right, #ff4444, #ffaa44, #44ff44); margin: 0 10px;"></div>
+      <div class="diff-label">
+        <span>EASIEST</span>
+        <span class="diff-dot easy"></span>
+      </div>
+    </div>
+
+    <div id="tasks-container"></div>
+
+    <footer>
+      <div style="margin-bottom: 5px;">🚀 DevOps Excellence PH • 2026 Edition</div>
+      <div>Tap any task to expand instructions</div>
+    </footer>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal" id="reset-modal">
+      <div class="modal-content">
+        <div class="modal-header">⚠️ Reset All Progress?</div>
+        <div class="modal-body">
+          This will clear all completed tasks, bookmarks, and personal notes. This action cannot be undone.
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-cancel" onclick="hideResetModal()">Cancel</button>
+          <button class="modal-btn modal-btn-confirm" onclick="confirmReset()">Reset All</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tasks = [
+      {
+        number: 1,
+        title: "Translating Complex Technical Concepts to Non-Technical Stakeholders",
+        difficulty: "EXTREME",
+        level: 1,
+        description: "The most challenging DevOps responsibility requiring exceptional communication skills.",
+        instructions: [
+          "Identify your audience's technical level (C-suite, marketing, sales, etc.)",
+          "Remove jargon and use analogies (e.g., 'CI/CD is like an assembly line for code')",
+          "Focus on business impact rather than technical details",
+          "Use visual aids: diagrams, flowcharts, before/after comparisons",
+          "Prepare executive summaries (1-page) for busy stakeholders",
+          "Practice the 'grandmother test' - can your lola understand it?",
+          "Quantify benefits in pesos/dollars and time saved",
+          "Use storytelling: 'Before we implemented X, we had Y problem...'",
+          "Prepare for questions by anticipating concerns",
+          "Follow up with written documentation in simple language"
+        ],
+        tips: "Filipino context: Use relatable examples from daily life. Instead of 'load balancer', say 'parang traffic enforcer ng data'. Build trust through pakikisama.",
+        techStack: ["PowerPoint", "Miro", "Lucidchart", "Google Slides"],
+        quickLinks: [
+          { label: "Communication Guide", url: "https://aws.amazon.com/blogs/apn/technical-to-non-technical-communication/" },
+          { label: "DevOps Glossary", url: "https://aws.amazon.com/devops/what-is-devops/" }
+        ]
+      },
+      {
+        number: 2,
+        title: "Planning & Testing Disaster Recovery (RTO/RPO)",
+        difficulty: "VERY HARD",
+        level: 2,
+        description: "Complex planning requiring cross-region coordination and thorough testing protocols.",
+        instructions: [
+          "Define RTO (Recovery Time Objective) - how quickly systems must recover",
+          "Define RPO (Recovery Point Objective) - acceptable data loss timeframe",
+          "Document all critical systems and dependencies",
+          "Create runbooks for each disaster scenario (region failure, data corruption)",
+          "Set up AWS multi-region architecture (primary: ap-southeast-1 Singapore, backup: ap-southeast-3 Jakarta)",
+          "Implement automated backups: RDS snapshots, S3 cross-region replication",
+          "Use AWS Backup for centralized backup management",
+          "Schedule quarterly DR drills (simulate failures)",
+          "Test restoration procedures and measure actual RTO/RPO",
+          "Update DR plans based on test results",
+          "Train team members on DR procedures",
+          "Set up monitoring alerts for replication lag"
+        ],
+        tips: "Start with Tier 1 critical systems first. In PH, consider power outages and internet connectivity issues in your DR planning.",
+        techStack: ["AWS Backup", "RDS Snapshots", "S3 Replication", "Route 53", "CloudFormation"],
+        quickLinks: [
+          { label: "AWS DR Guide", url: "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html" },
+          { label: "RTO/RPO Calculator", url: "https://calculator.aws/" }
+        ]
+      },
+      {
+        number: 3,
+        title: "Measurable Cost Optimization Without Compromising Performance",
+        difficulty: "HARD",
+        level: 3,
+        description: "Ongoing analysis and balancing act between cost savings and system performance.",
+        instructions: [
+          "Enable AWS Cost Explorer and set up daily cost reports",
+          "Identify top 5 cost drivers in your infrastructure",
+          "Right-size EC2 instances using CloudWatch metrics (CPU, memory utilization)",
+          "Implement auto-scaling policies to match demand",
+          "Use Reserved Instances or Savings Plans for predictable workloads (up to 72% savings)",
+          "Migrate suitable workloads to Spot Instances",
+          "Set up S3 lifecycle policies (move old data to Glacier/Deep Archive)",
+          "Delete unused EBS volumes and old snapshots",
+          "Use AWS Trusted Advisor recommendations",
+          "Implement tagging strategy to track costs per project/team",
+          "Schedule non-prod environments to shut down outside business hours",
+          "Monitor and eliminate idle resources weekly",
+          "Set up billing alerts at 50%, 75%, 90% of budget"
+        ],
+        tips: "Track cost per transaction or cost per user. Create monthly reports showing savings in PHP. Use Cost Anomaly Detection to catch unexpected spikes.",
+        techStack: ["AWS Cost Explorer", "CloudWatch", "Trusted Advisor", "AWS Budgets", "Lambda"],
+        quickLinks: [
+          { label: "Cost Optimization", url: "https://aws.amazon.com/pricing/cost-optimization/" },
+          { label: "AWS Pricing Calculator", url: "https://calculator.aws/" }
+        ]
+      },
+      {
+        number: 4,
+        title: "Ensuring SOC2 Compliance with Proactive Monitoring",
+        difficulty: "HARD",
+        level: 4,
+        description: "Security-focused responsibility requiring regulatory knowledge and continuous vigilance.",
+        instructions: [
+          "Understand SOC2 Trust Service Criteria (Security, Availability, Confidentiality, Privacy, Processing Integrity)",
+          "Enable AWS CloudTrail for all API activity logging",
+          "Set up AWS Config to track resource configuration changes",
+          "Implement AWS GuardDuty for threat detection",
+          "Enable AWS Security Hub for centralized security findings",
+          "Create IAM policies following least privilege principle",
+          "Enforce MFA for all users, especially admins",
+          "Set up VPC Flow Logs for network traffic analysis",
+          "Encrypt data at rest (S3, RDS, EBS) and in transit (SSL/TLS)",
+          "Implement automated compliance checks using AWS Config Rules",
+          "Set up alerts for security violations (SNS notifications)",
+          "Conduct regular access reviews (quarterly)",
+          "Maintain audit logs for at least 1 year",
+          "Document all security policies and procedures"
+        ],
+        tips: "Work with your auditor early. Create a compliance dashboard. Filipino companies: coordinate with your Data Privacy Officer for GDPR/DPA compliance.",
+        techStack: ["CloudTrail", "AWS Config", "GuardDuty", "Security Hub", "IAM", "KMS"],
+        quickLinks: [
+          { label: "SOC2 Compliance", url: "https://aws.amazon.com/compliance/soc-2-faqs/" },
+          { label: "Security Best Practices", url: "https://docs.aws.amazon.com/security/" }
+        ]
+      },
+      {
+        number: 5,
+        title: "Optimizing AWS Databases (RDS/Aurora) for Cost, Availability, Security",
+        difficulty: "MODERATE",
+        level: 5,
+        description: "Technical database management balancing multiple factors.",
+        instructions: [
+          "Choose the right database engine (PostgreSQL, MySQL, Aurora) based on workload",
+          "Use Aurora Serverless v2 for variable workloads (auto-scales, pay per use)",
+          "Implement Multi-AZ deployments for high availability (99.95% SLA)",
+          "Set up Read Replicas to offload read traffic from primary",
+          "Enable automated backups with appropriate retention (7-35 days)",
+          "Use Performance Insights to identify slow queries",
+          "Optimize database parameters (connection pooling, cache settings)",
+          "Implement database encryption (at rest and in transit)",
+          "Use IAM database authentication instead of passwords",
+          "Set up CloudWatch alarms for CPU, connections, storage",
+          "Schedule maintenance windows during low-traffic hours (PH time: 2-4 AM)",
+          "Test database restore procedures monthly",
+          "Implement database connection pooling (RDS Proxy)"
+        ],
+        tips: "Start with general-purpose SSD (gp3). Monitor IOPS usage. Consider Aurora for high-traffic applications. For PH startups, begin with smaller instances and scale up.",
+        techStack: ["RDS", "Aurora", "RDS Proxy", "Performance Insights", "CloudWatch"],
+        quickLinks: [
+          { label: "RDS User Guide", url: "https://docs.aws.amazon.com/rds/" },
+          { label: "Aurora Best Practices", url: "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.BestPractices.html" }
+        ]
+      },
+      {
+        number: 6,
+        title: "Designing & Maintaining CI/CD Pipelines (GitLab CI)",
+        difficulty: "MODERATE",
+        level: 6,
+        description: "Core DevOps skill that is technical but follows structured patterns.",
+        instructions: [
+          "Set up GitLab Runner on EC2 or ECS",
+          "Create .gitlab-ci.yml in repository root",
+          "Define pipeline stages: build, test, deploy",
+          "Implement automated testing (unit, integration, e2e)",
+          "Use Docker for consistent build environments",
+          "Store secrets in GitLab CI/CD variables (masked, protected)",
+          "Implement blue-green or canary deployments",
+          "Set up automatic rollback on failed deployments",
+          "Use caching to speed up pipeline execution",
+          "Implement branch-based deployments (dev → staging → production)",
+          "Set up pipeline notifications (Slack, email)",
+          "Monitor pipeline success rates and build times",
+          "Document pipeline architecture and processes",
+          "Implement code quality gates (linting, security scanning)"
+        ],
+        tips: "Start simple with 3 stages, then expand. Use pipeline templates for consistency across projects. For Filipino teams, schedule deployments during business hours initially.",
+        techStack: ["GitLab CI", "Docker", "AWS ECS", "ECR", "CodeDeploy", "S3"],
+        quickLinks: [
+          { label: "GitLab CI Docs", url: "https://docs.gitlab.com/ee/ci/" },
+          { label: "CI/CD Pipeline Examples", url: "https://docs.gitlab.com/ee/ci/examples/" }
+        ]
+      },
+      {
+        number: 7,
+        title: "Developing & Optimizing AWS Infrastructure with CDK",
+        difficulty: "EASIER",
+        level: 7,
+        description: "Infrastructure as Code - technical but well-documented and structured.",
+        instructions: [
+          "Install AWS CDK CLI: npm install -g aws-cdk",
+          "Initialize CDK project: cdk init app --language=typescript (or python)",
+          "Define infrastructure using CDK constructs (high-level components)",
+          "Use L3 constructs (patterns) when available for best practices",
+          "Organize stacks by environment (dev, staging, prod)",
+          "Implement CDK context for environment-specific values",
+          "Use CDK aspects for cross-cutting concerns (tagging, encryption)",
+          "Test infrastructure with cdk synth to generate CloudFormation",
+          "Preview changes with cdk diff before deploying",
+          "Deploy with cdk deploy --require-approval never (for automation)",
+          "Version control your CDK code in Git",
+          "Use CDK constructs library for common patterns",
+          "Implement stack dependencies for proper ordering",
+          "Document your infrastructure code with comments"
+        ],
+        tips: "Start with CDK examples from AWS documentation. Use TypeScript for better IDE support. Filipino devs: join AWS PH community for CDK best practices and local examples.",
+        techStack: ["AWS CDK", "TypeScript/Python", "CloudFormation", "Node.js", "Git"],
+        quickLinks: [
+          { label: "CDK Workshop", url: "https://cdkworkshop.com/" },
+          { label: "CDK API Reference", url: "https://docs.aws.amazon.com/cdk/api/v2/" }
+        ]
+      }
+    ];
+
+    const container = document.getElementById('tasks-container');
+
+    tasks.forEach(task => {
+      const card = document.createElement('div');
+      card.className = 'task-card';
+      
+      card.innerHTML = `
+        <div class="task-header" onclick="toggleTask(${task.number})">
+          <div class="task-number">${task.number}</div>
+          <div class="task-title">${task.title}</div>
+          <div class="difficulty-badge level-${task.level}">${task.difficulty}</div>
+          <button class="bookmark-btn" id="bookmark-${task.number}" onclick="toggleBookmark(${task.number}, event)">☆</button>
+          <span class="expand-icon" id="icon-${task.number}">▶</span>
+        </div>
+        <div class="task-content" id="content-${task.number}">
+          <div style="font-size: 11px; color: #b0b0b0; margin-bottom: 10px;">${task.description}</div>
+          
+          <div class="section-title">📋 Step-by-Step Instructions</div>
+          <ul class="instruction-list">
+            ${task.instructions.map(inst => `<li>${inst}</li>`).join('')}
+          </ul>
+          
+          <div class="tip-box">
+            <div class="tip-label">💡 Filipino DevOps Tip</div>
+            <div>${task.tips}</div>
+          </div>
+          
+          <div class="section-title">🛠️ Tech Stack</div>
+          <div class="tech-stack">
+            ${task.techStack.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+          </div>
+
+          <div class="section-title">🔗 Quick Links to Documentation</div>
+          <div class="quick-links">
+            ${task.quickLinks.map(link => `<a href="${link.url}" target="_blank" class="link-btn">📄 ${link.label}</a>`).join('')}
+          </div>
+
+          <div class="notes-section">
+            <div class="notes-header">
+              <div class="section-title" style="margin: 0;">📝 Personal Notes</div>
+              <button class="notes-btn" onclick="toggleNotes(${task.number}, event)">
+                <span id="notes-btn-text-${task.number}">Add Note</span>
+              </button>
+            </div>
+            <textarea 
+              class="notes-textarea" 
+              id="notes-textarea-${task.number}" 
+              placeholder="Add your own tips, learnings, or reminders here..."
+              onblur="saveNote(${task.number})"
+            ></textarea>
+            <div class="saved-note" id="saved-note-${task.number}"></div>
+          </div>
+
+          <div class="checkbox-container" onclick="toggleComplete(${task.number}, event)">
+            <div class="custom-checkbox" id="checkbox-${task.number}">
+              <span class="checkmark">✓</span>
+            </div>
+            <div class="checkbox-label">Mark as completed</div>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(card);
+    });
+
+    // Load saved progress from storage
+    function loadProgress() {
+      const saved = localStorage.getItem('devops-progress');
+      if (saved) {
+        const completed = JSON.parse(saved);
+        completed.forEach(taskNum => {
+          const checkbox = document.getElementById(`checkbox-${taskNum}`);
+          const card = checkbox.closest('.task-card');
+          if (checkbox) {
+            checkbox.classList.add('checked');
+            card.classList.add('completed');
+          }
+        });
+        updateProgressBar();
+      }
+      
+      // Load bookmarks
+      const bookmarks = localStorage.getItem('devops-bookmarks');
+      if (bookmarks) {
+        const bookmarked = JSON.parse(bookmarks);
+        bookmarked.forEach(taskNum => {
+          const bookmarkBtn = document.getElementById(`bookmark-${taskNum}`);
+          const card = bookmarkBtn.closest('.task-card');
+          if (bookmarkBtn) {
+            bookmarkBtn.textContent = '★';
+            card.classList.add('bookmarked');
+          }
+        });
+      }
+      
+      // Load notes
+      const notes = localStorage.getItem('devops-notes');
+      if (notes) {
+        const savedNotes = JSON.parse(notes);
+        Object.keys(savedNotes).forEach(taskNum => {
+          const noteText = savedNotes[taskNum];
+          const savedNote = document.getElementById(`saved-note-${taskNum}`);
+          const btnText = document.getElementById(`notes-btn-text-${taskNum}`);
+          if (savedNote && noteText) {
+            savedNote.textContent = noteText;
+            savedNote.classList.add('active');
+            btnText.textContent = 'Edit Note';
+          }
+        });
+      }
+    }
+
+    // Save progress to storage
+    function saveProgress() {
+      const completed = [];
+      tasks.forEach(task => {
+        const checkbox = document.getElementById(`checkbox-${task.number}`);
+        if (checkbox && checkbox.classList.contains('checked')) {
+          completed.push(task.number);
+        }
+      });
+      localStorage.setItem('devops-progress', JSON.stringify(completed));
+    }
+
+    // Toggle bookmark
+    function toggleBookmark(taskNumber, event) {
+      event.stopPropagation();
+      const bookmarkBtn = document.getElementById(`bookmark-${taskNumber}`);
+      const card = bookmarkBtn.closest('.task-card');
+      
+      if (bookmarkBtn.textContent === '☆') {
+        bookmarkBtn.textContent = '★';
+        card.classList.add('bookmarked');
+      } else {
+        bookmarkBtn.textContent = '☆';
+        card.classList.remove('bookmarked');
+      }
+      
+      // Save bookmarks
+      const bookmarks = [];
+      tasks.forEach(task => {
+        const btn = document.getElementById(`bookmark-${task.number}`);
+        if (btn && btn.textContent === '★') {
+          bookmarks.push(task.number);
+        }
+      });
+      localStorage.setItem('devops-bookmarks', JSON.stringify(bookmarks));
+    }
+
+    // Toggle notes editor
+    function toggleNotes(taskNumber, event) {
+      event.stopPropagation();
+      const textarea = document.getElementById(`notes-textarea-${taskNumber}`);
+      const savedNote = document.getElementById(`saved-note-${taskNumber}`);
+      const btnText = document.getElementById(`notes-btn-text-${taskNumber}`);
+      
+      if (textarea.classList.contains('active')) {
+        // Close editor
+        textarea.classList.remove('active');
+        if (textarea.value.trim()) {
+          savedNote.textContent = textarea.value;
+          savedNote.classList.add('active');
+          btnText.textContent = 'Edit Note';
+          saveNote(taskNumber);
+        } else {
+          savedNote.classList.remove('active');
+          btnText.textContent = 'Add Note';
+        }
+      } else {
+        // Open editor
+        textarea.value = savedNote.textContent;
+        textarea.classList.add('active');
+        savedNote.classList.remove('active');
+        textarea.focus();
+        btnText.textContent = 'Save Note';
+      }
+    }
+
+    // Save note
+    function saveNote(taskNumber) {
+      const textarea = document.getElementById(`notes-textarea-${taskNumber}`);
+      const noteText = textarea.value.trim();
+      
+      const notes = JSON.parse(localStorage.getItem('devops-notes') || '{}');
+      
+      if (noteText) {
+        notes[taskNumber] = noteText;
+      } else {
+        delete notes[taskNumber];
+      }
+      
+      localStorage.setItem('devops-notes', JSON.stringify(notes));
+    }
+
+    // Expand all tasks
+    function expandAll() {
+      tasks.forEach(task => {
+        const content = document.getElementById(`content-${task.number}`);
+        const icon = document.getElementById(`icon-${task.number}`);
+        if (!content.classList.contains('active')) {
+          content.classList.add('active');
+          icon.classList.add('rotated');
+        }
+      });
+    }
+
+    // Collapse all tasks
+    function collapseAll() {
+      tasks.forEach(task => {
+        const content = document.getElementById(`content-${task.number}`);
+        const icon = document.getElementById(`icon-${task.number}`);
+        if (content.classList.contains('active')) {
+          content.classList.remove('active');
+          icon.classList.remove('rotated');
+        }
+      });
+    }
+
+    // Show reset modal
+    function showResetModal() {
+      document.getElementById('reset-modal').classList.add('active');
+    }
+
+    // Hide reset modal
+    function hideResetModal() {
+      document.getElementById('reset-modal').classList.remove('active');
+    }
+
+    // Confirm reset
+    function confirmReset() {
+      // Clear all data
+      localStorage.removeItem('devops-progress');
+      localStorage.removeItem('devops-bookmarks');
+      localStorage.removeItem('devops-notes');
+      
+      // Reset UI
+      tasks.forEach(task => {
+        const checkbox = document.getElementById(`checkbox-${task.number}`);
+        const card = checkbox.closest('.task-card');
+        const bookmarkBtn = document.getElementById(`bookmark-${task.number}`);
+        const savedNote = document.getElementById(`saved-note-${task.number}`);
+        const textarea = document.getElementById(`notes-textarea-${task.number}`);
+        const btnText = document.getElementById(`notes-btn-text-${task.number}`);
+        
+        checkbox.classList.remove('checked');
+        card.classList.remove('completed', 'bookmarked');
+        bookmarkBtn.textContent = '☆';
+        savedNote.textContent = '';
+        savedNote.classList.remove('active');
+        textarea.value = '';
+        textarea.classList.remove('active');
+        btnText.textContent = 'Add Note';
+      });
+      
+      updateProgressBar();
+      hideResetModal();
+    }
+
+    // Toggle task completion
+    function toggleComplete(taskNumber, event) {
+      event.stopPropagation();
+      const checkbox = document.getElementById(`checkbox-${taskNumber}`);
+      const card = checkbox.closest('.task-card');
+      
+      checkbox.classList.toggle('checked');
+      card.classList.toggle('completed');
+      
+      saveProgress();
+      updateProgressBar();
+    }
+
+    // Update progress bar
+    function updateProgressBar() {
+      let completedCount = 0;
+      tasks.forEach(task => {
+        const checkbox = document.getElementById(`checkbox-${task.number}`);
+        if (checkbox && checkbox.classList.contains('checked')) {
+          completedCount++;
+        }
+      });
+      
+      const percentage = Math.round((completedCount / tasks.length) * 100);
+      const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      const progressPercentage = document.getElementById('progress-percentage');
+      const completedCountEl = document.getElementById('completed-count');
+      
+      progressFill.style.width = percentage + '%';
+      progressPercentage.textContent = percentage + '%';
+      completedCountEl.textContent = completedCount;
+      
+      if (percentage >= 50) {
+        progressText.textContent = percentage + '%';
+        progressPercentage.style.color = '#0f2027';
+      } else {
+        progressText.textContent = '';
+        progressPercentage.style.color = '#00ff88';
+      }
+    }
+
+    function toggleTask(taskNumber) {
+      const content = document.getElementById(`content-${taskNumber}`);
+      const icon = document.getElementById(`icon-${taskNumber}`);
+      
+      content.classList.toggle('active');
+      icon.classList.toggle('rotated');
+    }
+
+    // Initialize on load
+    loadProgress();
+  </script>
+</body>
+</html>
